@@ -10,4 +10,4 @@ go 1.18 以上
 >wif:L2nSvnZkk7Q75QCuxQcqCu38ovFn9nbLcRBa5P9b8BfCnt1bVoZP,amount:10,address:1ApPD1tqjPgKJjvtEFXD7xD2hbNPdKLLzo,compress:true<br/>
 # 其他
 ![image](https://github.com/fgmiracle/miracle_bitcoin/blob/main/projectimg/help.png)
-![image](https://github.com/fgmiracle/miracle_bitcoin/run.png)
+![image](https://github.com/fgmiracle/miracle_bitcoin/blob/main/projectimg/run.png)
