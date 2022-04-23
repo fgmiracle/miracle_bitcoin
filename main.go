@@ -24,27 +24,59 @@ import (
 
 var (
 	dbDir           = ""
+	gcPercent       = uint(10)
+	cpu             = 0
 	addrMap         = map[string]bool{"p2pk": true, "p2pkh": true, "p2sh": true, "p2tr": false, "p2wpkh": false, "p2wsh": false}
 	dbMap           = make(map[string]map[string]int64)
 	generalKeyCount = uint64(0)
+
+	miracle = "                   _ooOoo_\n" +
+		"                  o8888888o\n" +
+		"                  88\" . \"88\n" +
+		"                  (| -_- |)\n" +
+		"                  O\\  =  /O\n" +
+		"               ____/`---'\\____\n" +
+		"             .'  \\\\|     |//  `.\n" +
+		"            /  \\\\|||  :  |||//  \\\n" +
+		"           /  _||||| -:- |||||-  \\\n" +
+		"           |   | \\\\\\  -  /// |   |\n" +
+		"           | \\_|  ''\\---/''  |   |\n" +
+		"           \\  .-\\__  `-`  ___/-. /\n" +
+		"         ___`. .'  /--.--\\  `. . __\n" +
+		"      .\"\" '<  `.___\\_<|>_/___.'  >'\"\".\n" +
+		"     | | :  `- \\`.;`\\ _ /`;.`/ - ` : | |\n" +
+		"     \\  \\ `-.   \\_ __\\ /__ _/   .-` /  /\n" +
+		"======`-.____`-.___\\_____/___.-`____.-'======\n" +
+		"                   `=---='\n" +
+		"^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n" +
+		"         佛祖保佑       财富自由\n"
 )
 
 func main() {
-	debug.SetGCPercent(10)
-	cup := runtime.NumCPU()
-	flag.StringVar(&dbDir, "db", "db/", "")
+
+	flag.StringVar(&dbDir, "db", "db/", "比特币数据库地址，默认为当前路径的db目录下")
+	flag.UintVar(&gcPercent, "gc", 10, "gc参数设置(正整数)（值越小GC越频繁，CPU消耗越高，内存占用少）")
+	flag.IntVar(&cpu, "go", 0, "执行业务的携程数量，默认为：cpu*2")
 	flag.Parse()
+	if cpu == 0 {
+		cpu = runtime.NumCPU() * 2
+	}
+
+	debug.SetGCPercent(int(gcPercent))
 	fmt.Println("-----------------------------begin load db-----------------------------")
 	loadDB()
 	fmt.Println("-----------------------------over load db-----------------------------")
-	for i := 0; i < cup; i++ {
+	for i := 0; i < cpu; i++ {
 		go process()
 	}
 
 	go func() {
+		fmt.Print(miracle)
+		var forCount uint64
 		for {
-			fmt.Printf("<now general key count:%d>\n", atomic.LoadUint64(&generalKeyCount))
-			time.Sleep(time.Second * 10)
+			fmt.Printf("\r     已经生成Key数量:%d      ", atomic.LoadUint64(&generalKeyCount))
+			time.Sleep(time.Millisecond * 500)
+			forCount++
 		}
 	}()
 
