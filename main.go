@@ -163,8 +163,7 @@ func process() {
 		atomic.AddUint64(&generalKeyCount, 1)
 		wif, address, segwitBech32, segwitNested, err := GenerateFromBytes(prvKey, true)
 		if err == nil {
-			//if amount := handle(address, segwitBech32, segwitNested); amount > 0 {
-			if true {
+			if amount := handle(address, segwitBech32, segwitNested); amount > 0 {
 				f, err := os.OpenFile("miracle.text", os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 				writeString := fmt.Sprintf("wif:%s,amount:%d,address:%s,compress:true\n", wif, 10, address)
 				if err != nil {
@@ -173,7 +172,6 @@ func process() {
 					f.Write([]byte(writeString))
 					f.Close()
 				}
-				break
 			}
 		}
 
